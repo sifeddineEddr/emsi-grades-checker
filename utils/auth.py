@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
-from scraper.init import *
-import time
+from scraper.init import driver, By, Select
 
 load_dotenv()
 
@@ -20,3 +19,4 @@ def authenticate():
     username.send_keys(os.getenv("USER"))
     pwd.send_keys(os.getenv("PASSWORD"))
     submit.click()
+    return True
