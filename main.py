@@ -1,4 +1,3 @@
-from scraper.init import driver
-driver.get("https://www.google.com")
+from utils.auth import *
 
-driver.quit()
+authenticate()
