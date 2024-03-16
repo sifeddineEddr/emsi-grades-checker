@@ -1,4 +1,5 @@
 import os
+import re
 from dotenv import load_dotenv
 from scraper.init import driver, By, Select
 
@@ -19,4 +20,8 @@ def authenticate():
     username.send_keys(os.getenv("USER"))
     pwd.send_keys(os.getenv("PASSWORD"))
     submit.click()
+
+    # checking if the authentication wasn't successful
+    if re.match(r".*error.*", driver.current_url):
+        return False
     return True
