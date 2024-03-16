@@ -11,6 +11,7 @@ if authenticate():
         if navigate(term):
             print(f"Term {term+1}:")
             bring_grades()
+    print("done")
 
 time.sleep(30)
 driver.quit()

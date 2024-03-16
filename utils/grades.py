@@ -1,5 +1,10 @@
 import time
-from scraper.init import driver, By, WebDriverWait, EC
+from scraper.init import driver, By, WebDriverWait, EC, ActionChains
+
+
+def scroll_to_element(element):
+    actions = ActionChains(driver)
+    actions.scroll_to_element(element).perform()
 
 
 def bring_grades():
@@ -8,23 +13,23 @@ def bring_grades():
     )
 
     for index, module in enumerate(modules):
-        try:
-            title = module.find_element(By.TAG_NAME, "h5").text
+        scroll_to_element(module)
 
-            # click the toggle button
-            module.find_element(By.CLASS_NAME, "details-btn").click()
+        title = module.find_element(By.TAG_NAME, "h5").text
 
-            module_details = WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located((By.ID, f"moduleDetails-{index}"))
-            )
+        details_dropdown = module.find_element(By.CLASS_NAME, "details-btn")
+        scroll_to_element(details_dropdown)
+        details_dropdown.click()
 
-            module_avg = (
-                module_details.find_element(By.CLASS_NAME, "moyenne-label")
-                .find_element(By.TAG_NAME, "span")
-                .text
-            )
+        module_details = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, f"moduleDetails-{index}"))
+        )
 
-            print(f"{title} - {module_avg}")
-            time.sleep(5)
-        except Exception as e:
-            print(f"Error {e}")
+        module_avg = (
+            module_details.find_element(By.CLASS_NAME, "moyenne-label")
+            .find_element(By.TAG_NAME, "span")
+            .text
+        )
+        time.sleep(3)
+        details_dropdown.click()
+        print(f"{title} - {module_avg}")
