@@ -1,4 +1,5 @@
 import time
+import json
 from scraper.init import driver, By, WebDriverWait, EC, ActionChains
 
 
@@ -8,11 +9,14 @@ def scroll_to_element(element):
 
 
 def bring_grades():
+    data = list()
+
     modules = driver.find_element(By.CLASS_NAME, "col").find_elements(
         By.CLASS_NAME, "card"
     )
 
     for index, module in enumerate(modules):
+        sub_data = list()
         scroll_to_element(module)
 
         title = module.find_element(By.TAG_NAME, "h5").text
@@ -30,6 +34,23 @@ def bring_grades():
             .find_element(By.TAG_NAME, "span")
             .text
         )
+        sub_modules = module_details.find_element(By.TAG_NAME, "tbody").find_elements(
+            By.TAG_NAME, "tr"
+        )
+        for sub_module in sub_modules:
+            texts = sub_module.find_elements(By.TAG_NAME, "td")
+            sub_data.append({texts[0].text: texts[1].text})
+
         time.sleep(3)
         details_dropdown.click()
-        print(f"{title} - {module_avg}")
+
+        data.append(
+            {
+                "module": title,
+                "average": module_avg,
+                "sub_modules": sub_data,
+            }
+        )
+
+    with open("grades.json", "w") as file:
+        json.dump(data, file)
