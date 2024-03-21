@@ -9,7 +9,7 @@ def navigate(term):
 
     link = WebDriverWait(driver, 10).until(EC.visibility_of(terms[term]))
     if "disabled" in link.get_attribute("class"):
-        print(f"{terms[term].text} disabled")
+        print(f"term {term+1} grades are not available yet!")
         return False
     else:
         link.click()

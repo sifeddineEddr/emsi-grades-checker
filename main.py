@@ -1,14 +1,16 @@
+import sys
 import time
 from scraper.init import driver
 from utils.auth import authenticate
 from utils.navigate import navigate
 from utils.grades import bring_grades
 
-while True:
-    try:
-        if authenticate():
-            print("Authenticated")
-            for term in range(0, 2):
+if __name__ == "__main__":
+    while True:
+        try:
+            term = int(sys.argv[1]) - 1  # 0 indexed
+            if authenticate():
+                print("Authenticated")
                 if navigate(term):
                     print(f"Term {term+1}:")
                     bring_grades()
@@ -17,9 +19,9 @@ while True:
 
                         # cheching if the file is not empty
                         if data.strip():
+                            print("Scraping process completed")
                             driver.quit()
                             break
-                    print("Retrying...")
-            print("Scraping process completed")
-    except Exception as e:
-        time.sleep(5)
+            print("Retrying...")
+        except Exception as e:
+            time.sleep(5)
